@@ -1,47 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 
 import Login from './components/Login/Login'
 import Home from './components/Home/Home'
 import MainHeader from './components/MainHeader/MainHeader'
+import AuthContext from './store/auth-context'
 
 
 function App() {
-	// Использую useState для авторизации
-	const [isLoggedIn, setIsLoggedIn] = useState(false)
-
-	// Проверяю, есть ли в локальном хранилище инфа о входе
-	useEffect(() => {
-		const userIsLoggedInfo = localStorage.getItem('isLoggedIn')
-		if (userIsLoggedInfo === 'hello') {
-			setIsLoggedIn(true) // Если да, то идет авторизация
-		}
-	}, [])
-
-
-	// Функция входа
-	const loginHandler = (email, password) => {
-		localStorage.setItem('isLoggedIn', 'hello') // Записываю в localStorage
-		setIsLoggedIn(true) // Обновляю состояние
-	}
-
-	// Функция выхода
-	const logoutHandler = () => {
-		setIsLoggedIn(false) // Сбрасываю авторизацию
-		localStorage.removeItem('isLoggedIn') // Удаляю из localStorage
-	}
+	const ctxData = useContext(AuthContext)
 
 	return (
     //Группирую элементы без лишних div
     //Передаю в шапку данные
     //Если не залогинен — показываю Login
     // Если залогинен — показываю Home
-		<React.Fragment> 
-			<MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+		<> 
+			<MainHeader />
 			<main>
-				{!isLoggedIn && <Login onLogin={loginHandler} />}
-				{isLoggedIn && <Home onLogout={logoutHandler} />}
+				{!ctxData.isLoggedIn && <Login />}
+				{ctxData.isLoggedIn && <Home />}
 			</main>
-		</React.Fragment>
+		</>
 	)
 }
 // Экспортирую компонент App
